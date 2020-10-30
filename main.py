@@ -35,10 +35,12 @@ def draw_pipes(pipes):
 def check_collision(pipes):
     for pipe in pipes:
         if bird_rect.colliderect(pipe):  # check if the bird collides with any of the pipes
-            pass
+            return False
 
     if bird_rect.top <= -100 or bird_rect.bottom >= 900:  # the game is over if the bird hits the floor or flies too high
-        pass
+        return False
+
+    return True
 
 
 pygame.init()  # initialize all imported pygame modules
@@ -48,6 +50,7 @@ clock = pygame.time.Clock()  # create an object to help track time
 # game variables
 gravity = 0.25
 bird_movement = 0
+game_active = True
 
 # import images
 bg_surface = pygame.image.load('assets/background-day.png').convert()
@@ -84,14 +87,16 @@ while True:
 
     screen.blit(bg_surface, (0, 0))  # position the background image at the origin point of the screen
 
-    # bird
-    bird_movement += gravity
-    bird_rect.centery += bird_movement  # make the bird fall down
-    screen.blit(bird_surface, bird_rect)  # draw the bird_surface onto the bird_rect, at the bird_rect's position
+    if game_active:
+        # bird
+        bird_movement += gravity
+        bird_rect.centery += bird_movement  # make the bird fall down
+        screen.blit(bird_surface, bird_rect)  # draw the bird_surface onto the bird_rect, at the bird_rect's position
+        game_active = check_collision(pipe_list)  # check if the bird has collided with any pipes
 
-    # pipes
-    pipe_list = move_pipes(pipe_list)  # move pipes to the left and overwrite existing list
-    draw_pipes(pipe_list)
+        # pipes
+        pipe_list = move_pipes(pipe_list)  # move pipes to the left and overwrite existing list
+        draw_pipes(pipe_list)
 
     # floor
     floor_x_pos -= 1  # make the floor move to the left
