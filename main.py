@@ -10,8 +10,9 @@ def draw_floor():
 
 def create_pipe():
     random_pipe_pos = random.choice(pipe_height)  # choose a random height from the list of possible heights
-    new_pipe = pipe_surface.get_rect(midtop=(700, random_pipe_pos))  # create a rectangle and place its midtop at a given position
-    return new_pipe
+    bottom_pipe = pipe_surface.get_rect(midtop=(700, random_pipe_pos))  # create a rectangle and place it at a given position
+    top_pipe = pipe_surface.get_rect(midbottom=(700, random_pipe_pos - 300))  # create another rectangle and place it higher
+    return bottom_pipe, top_pipe
 
 
 def move_pipes(pipes):
@@ -22,7 +23,11 @@ def move_pipes(pipes):
 
 def draw_pipes(pipes):
     for pipe in pipes:
-        screen.blit(pipe_surface, pipe)  # draw all pipes in the list on the screen
+        if pipe.bottom >= 780:  # bottom pipe
+            screen.blit(pipe_surface, pipe)  # draw all pipes in the list on the screen
+        else:  # top pipe
+            flip_pipe = pygame.transform.flip(pipe_surface, False, True)
+            screen.blit(flip_pipe, pipe)
 
 
 pygame.init()  # initialize all imported pygame modules
@@ -64,7 +69,7 @@ while True:
                 bird_movement = 0  # disable the effect of gravity
                 bird_movement -= 12  # make the bird go up after the player presses the spacebar
         if event.type == SPAWNPIPE:
-            pipe_list.append(create_pipe())  # add a new pipe to the list
+            pipe_list.extend(create_pipe())  # add a new pipe to the list
             print(pipe_list)
 
     screen.blit(bg_surface, (0, 0))  # position the background image at the origin point of the screen
