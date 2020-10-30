@@ -4,14 +4,16 @@ import random
 
 
 def draw_floor():
-    screen.blit(floor_surface, (floor_x_pos, 656))  # put this floor at the left side of the screen
-    screen.blit(floor_surface, (floor_x_pos + 576, 656))  # put another floor at the right side of the screen
+    screen.blit(floor_surface, (floor_x_pos, 900))  # put this floor at the left side of the screen
+    screen.blit(floor_surface, (floor_x_pos + 576, 900))  # put another floor at the right side of the screen
 
 
 def create_pipe():
     random_pipe_pos = random.choice(pipe_height)  # choose a random height from the list of possible heights
-    bottom_pipe = pipe_surface.get_rect(midtop=(700, random_pipe_pos))  # create a rectangle and place it at a given position
-    top_pipe = pipe_surface.get_rect(midbottom=(700, random_pipe_pos - 300))  # create another rectangle and place it higher
+    bottom_pipe = pipe_surface.get_rect(
+        midtop=(700, random_pipe_pos))  # create a rectangle and place it at a given position
+    top_pipe = pipe_surface.get_rect(
+        midbottom=(700, random_pipe_pos - 300))  # create another rectangle and place it higher
     return bottom_pipe, top_pipe
 
 
@@ -23,15 +25,24 @@ def move_pipes(pipes):
 
 def draw_pipes(pipes):
     for pipe in pipes:
-        if pipe.bottom >= 780:  # bottom pipe
+        if pipe.bottom >= 1024:  # bottom pipe
             screen.blit(pipe_surface, pipe)  # draw all pipes in the list on the screen
         else:  # top pipe
             flip_pipe = pygame.transform.flip(pipe_surface, False, True)
             screen.blit(flip_pipe, pipe)
 
 
+def check_collision(pipes):
+    for pipe in pipes:
+        if bird_rect.colliderect(pipe):  # check if the bird collides with any of the pipes
+            pass
+
+    if bird_rect.top <= -100 or bird_rect.bottom >= 900:  # the game is over if the bird hits the floor or flies too high
+        pass
+
+
 pygame.init()  # initialize all imported pygame modules
-screen = pygame.display.set_mode(size=(576, 780))  # initialize a display surface of 576 px x 780 px
+screen = pygame.display.set_mode(size=(576, 1024))  # initialize a display surface of 576 px x 1024 px
 clock = pygame.time.Clock()  # create an object to help track time
 
 # game variables
@@ -48,7 +59,7 @@ floor_x_pos = 0
 
 bird_surface = pygame.image.load('assets/bluebird-midflap.png').convert()
 bird_surface = pygame.transform.scale2x(bird_surface)
-bird_rect = bird_surface.get_rect(center=(100, 390))  # create a rectangle with the width and height of the
+bird_rect = bird_surface.get_rect(center=(100, 512))  # create a rectangle with the width and height of the
 # bird_surface and center it at a given position
 
 pipe_surface = pygame.image.load('assets/pipe-green.png')
@@ -70,7 +81,6 @@ while True:
                 bird_movement -= 12  # make the bird go up after the player presses the spacebar
         if event.type == SPAWNPIPE:
             pipe_list.extend(create_pipe())  # add a new pipe to the list
-            print(pipe_list)
 
     screen.blit(bg_surface, (0, 0))  # position the background image at the origin point of the screen
 
