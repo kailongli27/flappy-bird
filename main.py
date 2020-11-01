@@ -114,6 +114,9 @@ SPAWNPIPE = pygame.USEREVENT  # event to create a new pipe
 pygame.time.set_timer(SPAWNPIPE, 1200)  # the event will be triggered every 1200 ms
 pipe_height = [400, 600, 800]  # all of the possible heights for a pipe
 
+game_over_surface = pygame.transform.scale2x(pygame.image.load('assets/message.png').convert_alpha())
+game_over_rect = game_over_surface.get_rect(center=(288, 512))  # show a game over message at the center of the screen
+
 # game loop
 while True:
     for event in pygame.event.get():  # get events from the queue (e.g. user moving mouse, timer ending, etc.)
@@ -161,6 +164,7 @@ while True:
         score_display('main_game')  # show the player's current score
 
     else:  # when the game is over
+        screen.blit(game_over_surface, game_over_rect)  # display a game over message
         high_score = update_score(score, high_score)
         score_display('game_over')
 
