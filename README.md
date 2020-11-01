@@ -11,4 +11,4 @@ A Flappy Bird clone made using [Pygame](https://www.pygame.org/wiki/about)
 5. Use left-mouse-button to jump.
 
 ### Preview
-![Game preview](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+![Game preview](https://github.com/kailongli27/flappy-bird/blob/main/app_recording.gif)
