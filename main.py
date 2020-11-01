@@ -91,7 +91,7 @@ score = 0
 high_score = 0
 
 # import and scale images to fit screen size
-bg_surface = pygame.image.load('assets/background-day.png').convert()
+bg_surface = pygame.image.load('assets/background-night.png').convert()
 bg_surface = pygame.transform.scale2x(bg_surface)  # double the size of the surface
 
 floor_surface = pygame.image.load('assets/base.png').convert()
