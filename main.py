@@ -35,11 +35,10 @@ def draw_pipes(pipes):
 def check_collision(pipes):
     for pipe in pipes:
         if bird_rect.colliderect(pipe):  # check if the bird collides with any of the pipes
-            collision_sound.play()
+            death_sound.play()
             return False
 
     if bird_rect.top <= -100 or bird_rect.bottom >= 900:  # the game is over if the bird hits the floor or flies too high
-        death_sound.play()
         return False
 
     return True
@@ -121,9 +120,8 @@ game_over_rect = game_over_surface.get_rect(center=(288, 512))  # show a game ov
 
 # import sounds
 flap_sound = pygame.mixer.Sound('sound/sfx_wing.wav')
-collision_sound = pygame.mixer.Sound('sound/sfx_hit.wav')
+death_sound = pygame.mixer.Sound('sound/sfx_hit.wav')
 score_sound = pygame.mixer.Sound('sound/sfx_point.wav')
-death_sound = pygame.mixer.Sound('sound/sfx_die.wav')
 score_sound_countdown = 100
 
 # game loop
