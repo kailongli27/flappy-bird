@@ -130,12 +130,12 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()  # uninitialize all pygame modules
             sys.exit()
-        if event.type == pygame.KEYDOWN:  # detect if a key is physically pressed down
-            if event.key == pygame.K_SPACE and game_active:  # spacebar
+        if event.type == pygame.MOUSEBUTTONDOWN:  # detect if mouse click
+            if game_active:
                 bird_movement = 0  # disable the effect of gravity
                 bird_movement -= 10  # make the bird go up after the player presses the spacebar
                 flap_sound.play()
-            if event.key == pygame.K_SPACE and not game_active:
+            else:
                 game_active = True
                 pipe_list.clear()  # despawn all existing pipes
                 bird_rect.center = (100, 512)  # reset the bird's position
