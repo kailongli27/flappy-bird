@@ -47,6 +47,14 @@ def rotate_bird(bird):
     new_bird = pygame.transform.rotozoom(bird, -bird_movement * 3, 1)  # use bird_movement as the angle of rotation
     return new_bird
 
+
+def bird_animation():
+    new_bird = bird_frames[bird_index]
+    new_bird_rect = new_bird.get_rect(center=(100, bird_rect.centery))  # use the centery of the previous bird
+    # rectangle to avoid changing the bird's position
+    return new_bird, new_bird_rect
+
+
 pygame.init()  # initialize all imported pygame modules
 screen = pygame.display.set_mode(size=(576, 1024))  # initialize a display surface of 576 px x 1024 px
 clock = pygame.time.Clock()  # create an object to help track time
@@ -64,15 +72,21 @@ floor_surface = pygame.image.load('assets/base.png').convert()
 floor_surface = pygame.transform.scale2x(floor_surface)
 floor_x_pos = 0
 
-bird_surface = pygame.image.load('assets/bluebird-midflap.png').convert_alpha()
-bird_surface = pygame.transform.scale2x(bird_surface)
-bird_rect = bird_surface.get_rect(center=(100, 512))  # create a rectangle with the width and height of the
-# bird_surface and center it at a given position
+bird_downflap = pygame.transform.scale2x(pygame.image.load('assets/bluebird-downflap.png').convert_alpha())
+bird_midflap = pygame.transform.scale2x(pygame.image.load('assets/bluebird-midflap.png').convert_alpha())
+bird_upflap = pygame.transform.scale2x(pygame.image.load('assets/bluebird-upflap.png').convert_alpha())
+bird_frames = [bird_downflap, bird_midflap, bird_upflap]  # put all three surfaces into a list
+bird_index = 0
+bird_surface = bird_frames[bird_index]  # pick a bird surface from the list
+bird_rect = bird_surface.get_rect(center=(100, 512))
+
+BIRDFLAP = pygame.USEREVENT + 1  # event to animate the bird's wings
+pygame.time.set_timer(BIRDFLAP, 200)
 
 pipe_surface = pygame.image.load('assets/pipe-green.png')
 pipe_surface = pygame.transform.scale2x(pipe_surface)
 pipe_list = []
-SPAWNPIPE = pygame.USEREVENT  # an event to create a new pipe
+SPAWNPIPE = pygame.USEREVENT  # event to create a new pipe
 pygame.time.set_timer(SPAWNPIPE, 1200)  # the event will be triggered every 1200 ms
 pipe_height = [400, 600, 800]  # all of the possible heights for a pipe
 
@@ -85,7 +99,7 @@ while True:
         if event.type == pygame.KEYDOWN:  # detect if a key is physically pressed down
             if event.key == pygame.K_SPACE and game_active:  # spacebar
                 bird_movement = 0  # disable the effect of gravity
-                bird_movement -= 12  # make the bird go up after the player presses the spacebar
+                bird_movement -= 10  # make the bird go up after the player presses the spacebar
             if event.key == pygame.K_SPACE and not game_active:
                 game_active = True
                 pipe_list.clear()  # despawn all existing pipes
@@ -94,6 +108,14 @@ while True:
 
         if event.type == SPAWNPIPE:
             pipe_list.extend(create_pipe())  # add a new pipe to the list
+
+        if event.type == BIRDFLAP:
+            if bird_index < 2:
+                bird_index += 1  # choose a different wing animation from bird_frames
+            else:
+                bird_index = 0  # reset the index to the beginning of the list
+
+            bird_surface, bird_rect = bird_animation()
 
     screen.blit(bg_surface, (0, 0))  # position the background image at the origin point of the screen
 
