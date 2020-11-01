@@ -43,6 +43,10 @@ def check_collision(pipes):
     return True
 
 
+def rotate_bird(bird):
+    new_bird = pygame.transform.rotozoom(bird, -bird_movement * 3, 1)  # use bird_movement as the angle of rotation
+    return new_bird
+
 pygame.init()  # initialize all imported pygame modules
 screen = pygame.display.set_mode(size=(576, 1024))  # initialize a display surface of 576 px x 1024 px
 clock = pygame.time.Clock()  # create an object to help track time
@@ -52,7 +56,7 @@ gravity = 0.25
 bird_movement = 0
 game_active = True
 
-# import images
+# import and scale images to fit screen size
 bg_surface = pygame.image.load('assets/background-day.png').convert()
 bg_surface = pygame.transform.scale2x(bg_surface)  # double the size of the surface
 
@@ -60,7 +64,7 @@ floor_surface = pygame.image.load('assets/base.png').convert()
 floor_surface = pygame.transform.scale2x(floor_surface)
 floor_x_pos = 0
 
-bird_surface = pygame.image.load('assets/bluebird-midflap.png').convert()
+bird_surface = pygame.image.load('assets/bluebird-midflap.png').convert_alpha()
 bird_surface = pygame.transform.scale2x(bird_surface)
 bird_rect = bird_surface.get_rect(center=(100, 512))  # create a rectangle with the width and height of the
 # bird_surface and center it at a given position
@@ -96,8 +100,9 @@ while True:
     if game_active:
         # bird
         bird_movement += gravity
+        rotated_bird = rotate_bird(bird_surface)
         bird_rect.centery += bird_movement  # make the bird fall down
-        screen.blit(bird_surface, bird_rect)  # draw the bird_surface onto the bird_rect, at the bird_rect's position
+        screen.blit(rotated_bird, bird_rect)  # draw the bird onto the bird_rect
         game_active = check_collision(pipe_list)  # check if the bird has collided with any pipes
 
         # pipes
